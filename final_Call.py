@@ -26,13 +26,13 @@ def Response(audio):
 def myCommand():
     r=sr.Recognizer()
     with sr.Microphone() as source:
-        print('Say something...')
+       # print('Say something...')
         r.pause_threshold = 1
         r.adjust_for_ambient_noise(source)
         audio = r.listen(source)
     try:
         command = r.recognize_google(audio).lower()
-        print('You said: ' + command + '\n')
+       # print('You said: ' + command + '\n')
     except sr.UnknownValueError:
         Response("Not able to hear it! Lets have another try")
         command = myCommand();
@@ -59,11 +59,11 @@ def assistant(command):
         reg_ex = re.search('open (.+)', command)
         if reg_ex:
             domain = reg_ex.group(1)
-            print(domain)
+            #print(domain)
             url = 'https://www.' + domain
             webbrowser.open(url)
             Response('The website you have requested has been opened for you.')
-        fullfilment()
+        #fullfilment()
     elif 'close' in command:
         Response("Goodbye Have a nice time")
         sys.exit()
@@ -155,7 +155,7 @@ def assistant(command):
             #subprocess.Popen(["open", "-n", "/Applications/" + appname1], stdout=subprocess.PIPE)
             os.system("start "+reg_ex.group(1)+":")
             Response('I have launched the desired application')
-        fullfilment()
+       # fullfilment()
         
     elif 'tell me about' in command:
         reg_ex = re.search('tell me about (.*)', command)
@@ -170,7 +170,7 @@ def assistant(command):
         url = 'https://www.google.com/search?q=' +command
         webbrowser.open(url)
         Response('The website you have requested has been opened for you.')
-        fullfilment()
+        #fullfilment()
 
 ########################################################################
 
