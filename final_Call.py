@@ -8,6 +8,7 @@ import smtplib
 import requests
 import subprocess
 from pyowm import OWM
+import keyboard
 import youtube_dl
 import vlc
 import urllib.request as ur
@@ -17,6 +18,7 @@ import wikipedia
 import random
 from time import strftime
 import random
+import time
 ###########################################################
 
 
@@ -58,7 +60,7 @@ def options(title_list):
 
 
 ###############################################################
-
+'''
 
 def fullfilment():
     Response("Is your requirement fullfiled yes or not ")
@@ -69,7 +71,7 @@ def fullfilment():
     elif 'no' in command:
         Response("Continue Please, It's my duty to help")
         assistant(myCommand())
-
+'''
 
 ########################################################################
 
@@ -81,11 +83,11 @@ def assistant(command):
         reg_ex = re.search('open (.+)', command)
         if reg_ex:
             domain = reg_ex.group(1)
-            #print(domain)
+            # print(domain)
             url = 'https://www.' + domain
             webbrowser.open(url)
             Response("Here's what i can find")
-        #fullfilment()
+        # fullfilment()
     elif 'close' in command:
         Response("Goodbye Have a nice time")
         sys.exit()
@@ -144,11 +146,11 @@ def assistant(command):
         except Exception as e:
             Response(e)
 
-    elif 'current weather' in command:
-        reg_ex = re.search('current weather in (.*)', command)
+    elif 'weather' in command:
+        reg_ex = re.search('weather in (.*)', command)
         if reg_ex:
             city = reg_ex.group(1)
-            owm = OWM(API_key='ab0d5e80e8dafb2cb81fa9e82431c1fa')
+            owm = OWM(API_key='1b1ec775def13bcc7cdaaae98a8c7321')
             obs = owm.weather_at_place(city)
             w = obs.get_weather()
             k = w.get_status()
@@ -183,11 +185,9 @@ def assistant(command):
     elif 'launch' in command:
         reg_ex = re.search('launch (.*)', command)
         if reg_ex:
-            #appname = reg_ex.group(1)
-            #appname1 = appname+".exe"
-            #subprocess.Popen(["open", "-n", "/Applications/" + appname1], stdout=subprocess.PIPE)
             os.system("start " + reg_ex.group(1) + ":")
-            Response('I have launched the desired application')
+            Response('I have launched' + reg_ex.group(1) +
+                     'desired application')
     # fullfilment()
 
     elif 'tell me about' in command:
@@ -203,14 +203,17 @@ def assistant(command):
         url = 'https://www.google.com/search?q=' + command
         webbrowser.open(url)
         Response('The website you have requested has been opened for you.')
-        #fullfilment()
-    elif 'play a music' in command or 'play me a song' in command or 'play songs for me' in command or 'hit some song' in command:
+        # fullfilment()
+    elif 'play me some songs' in command or 'play songs for me' in command or 'hit some song' in command:
         music_dir = "D:\\SnapTube Audio"
-        Response("Playing songs for you")
+        Response("Creating Playlist, Please wait")
         songs = os.listdir(music_dir)
-        rand = random.randint(0, songs.__len__())
+        rand = random.randint(0, songs.__len__() - 1)
+        for song in songs:
+            if song.endswith(".mp3"):
+                os.startfile(os.path.join(music_dir, song))
         os.startfile(os.path.join(music_dir, songs[rand]))
-    elif 'play' in command and "youtube" in command:
+    elif "songs online" in command:
         Response("Please say the name of song")
         mysong = myCommand()
         path = 'D:\Python_Download'
@@ -226,7 +229,7 @@ def assistant(command):
         href_v = []
         for vid in soup1.findAll(attrs={'class': 'yt-uix-tile-link'}):
             if ('https://www.youtube.com' + vid['href']
-                ).startswith("https://www.youtube.com/watch?v="):
+                    ).startswith("https://www.youtube.com/watch?v="):
                 flag = 1
                 final_url = 'https://www.youtube.com' + vid['href']
                 url_list.append(final_url)
@@ -240,7 +243,6 @@ def assistant(command):
             str += " . "
         Response(str)
         index_val = options(title_list)
-        print(index_val)
         ydl_opts = {}
         os.chdir(path)
         url = url_list[index_val]
@@ -270,10 +272,6 @@ def initial(command):
 def call():
     assistant(myCommand())
 
-
-#   flag=1
-#   while flag!=0:
-#      fullfilment()
 
 Response("Give Your Command Arkadip, I am listening")
 call()
